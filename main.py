@@ -31,7 +31,7 @@ for i in segments:
 car.carStart()
 pygame.draw.line(screen,red,(car.x,car.y),(car.x,car.y),3)
 
-#show where we are
+#show where we are.
 car.showDash()
 
 #move car
