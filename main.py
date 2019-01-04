@@ -27,11 +27,6 @@ car.placeCarOnGrid(500,500)
 car.setDirection(90)
 car.setSpeed(10)
 
-
-#Plot a route for car
-for i in segments:
-    car.routeAdd(i)
-
 #Put car on first part of the route
 car.carStart()
 pygame.draw.line(screen,settings.red,(car.x+settings.xOffset,car.y+settings.yOffset),(car.x+settings.xOffset,car.y+settings.yOffset),3)

@@ -22,10 +22,11 @@ class Car:
                 x += 1
                 y += 1
 
-
         #ok we have a start on the grid now convert to actual location
         self.x = x
         self.y = y
+        print("Vehicle is now located")
+        self.showDash()
 
     def setDirection(self, direction):
         self.direction = direction
@@ -65,8 +66,23 @@ class Car:
     def carForwardLeftRight(self):
         self.carForward()
 
+    def displayMatrix(self):
+        matrix = settings.matrix
+        print("Matrix:")
+        print(str(matrix[self.x-1][self.y-1]) +
+              str(matrix[self.x][self.y-1]) +
+              str(matrix[self.x+1][self.y-1]))
+        print(str(matrix[self.x-1][self.y]) +
+              str(matrix[self.x][self.y]) +
+              str(matrix[self.x+1][self.y]))
+        print(str(matrix[self.x-1][self.y+1]) +
+              str(matrix[self.x][self.y+1]) +
+              str(matrix[self.x+1][self.y+1]))
+        print(".........................")
+
     def movePlusX(self):
         matrix = settings.matrix
+        self.displayMatrix()
         # There is no way forward so stop (or even reverse ... later)
         if (matrix[self.x+1][self.y] == 0
             and matrix[self.x+1][self.y - 1] ==0
@@ -149,9 +165,6 @@ class Car:
         self.route.append(routeSegment)
 
     def carStart(self):
-        self.x, self.y = self.route[0]
-        self.destx, self.desty = self.route[1]
-        self.currentSegment = 1
         self.carRunning = True
 
     def carStop(self):
