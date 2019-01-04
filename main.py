@@ -2,26 +2,31 @@ import car
 import map
 import pygame
 import sys
+import settings
 
+
+settings.init()
 pygame.init()
-white = (255,255,255)
-black = (0,0,0)
-red = (255,0,0)
+
 
 segments = [(10,10),(10,500),(500,500),(500,10)]
 
 screen = pygame.display.set_mode((1500,1200))
 clock = pygame.time.Clock()
 
-screen.fill(white)
+screen.fill(settings.white)
 
 map = map.Map()
-map.drawLines(screen)
+map.drawLines(screen,settings.xOffset,settings.yOffset)
 
 pygame.display.update()
 
 #Create a Car
-car = car.Car(10,10,10, 0)
+car = car.Car()
+car.placeCarOnGrid(500,500)
+car.setDirection(90)
+car.setSpeed(10)
+
 
 #Plot a route for car
 for i in segments:
@@ -29,7 +34,7 @@ for i in segments:
 
 #Put car on first part of the route
 car.carStart()
-pygame.draw.line(screen,red,(car.x,car.y),(car.x,car.y),3)
+pygame.draw.line(screen,settings.red,(car.x+settings.xOffset,car.y+settings.yOffset),(car.x+settings.xOffset,car.y+settings.yOffset),3)
 
 #show where we are.
 car.showDash()
@@ -46,9 +51,9 @@ while True:
         car.move()
         car.showDash()
 
-    screen.fill(white)
-    map.drawLines(screen)
-    pygame.draw.circle(screen, red, (car.x, car.y), 3, 3)
+    screen.fill(settings.white)
+    map.drawLines(screen,settings.xOffset,settings.yOffset)
+    pygame.draw.circle(screen, settings.red, (car.x+settings.xOffset, car.y+settings.yOffset), 3, 3)
 
     pygame.display.update()
 

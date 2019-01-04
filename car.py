@@ -1,24 +1,112 @@
+import settings
+
 class Car:
-    def __init__(self,x,y,speed, direction):
-        self.x = x
-        self.y = y
-        self.speed = speed
-        self.direction = direction
+    def __init__(self):
+        self.x = 0
+        self.y = 0
+        self.speed = 10
+        self.direction = 90
         self.currentSegment = 0
-        self.destx = x
-        self.desty = y
+        self.destx = 0
+        self.desty = 0
         self.route = []
 
+
+    def placeCarOnGrid(self,x,y):
+        #Do some magic and find a spot to place the car
+        foundSpot = False
+        while foundSpot == False:
+            if settings.matrix[x][y] == 1:
+                foundSpot = True
+            else:
+                x += 1
+                y += 1
+
+
+        #ok we have a start on the grid now convert to actual location
+        self.x = x
+        self.y = y
+
+    def setDirection(self, direction):
+        self.direction = direction
+
+    def setSpeed(self,speed):
+        self.speed = speed
 
     def showDash(self):
         print("X=: "+ str(self.x) + " Y=: " + str(self.y) + " Speed=: " + str(self.speed) + " Direction=:" + str(self.direction))
 
+
+    def carLeft(self):
+        self.direction = self.direction - 90
+        if self.direction < 0:
+            self.direction = 270
+        self.y -= 1
+
+    def carRight(self):
+        self.direction += 90
+        if self.direction > 270:
+            self.direction = 0
+
+    def carLeftRight(self):
+        # Always go left for now... maze breaking
+        self.carLeft()
+
+    def carForward(self):
+        self.x += 1
+
+    def carForwardLeft(self):
+        # for now only go Forward
+        self.carForward()
+
+    def carForwardRight(self):
+        self.carForward()
+
+    def carForwardLeftRight(self):
+        self.carForward()
+
     def movePlusX(self):
-        if self.x + self.speed <= self.destx:
-            self.x += self.speed
-        else:
-            #add here later the number of spaces to move on next segment so flow is continious
-            self.nextSegment()
+        matrix = settings.matrix
+        # There is no way forward so stop (or even reverse ... later)
+        if (matrix[self.x+1][self.y] == 0
+            and matrix[self.x+1][self.y - 1] ==0
+            and matrix[self.x+1][self.y + 1] == 0):
+            self.carStop()
+
+        if (matrix[self.x + 1][self.y] == 0
+                and matrix[self.x][self.y - 1] == 1
+                and matrix[self.x][self.y + 1] == 0):
+            self.carLeft()
+
+        if (matrix[self.x + 1][self.y] == 0
+                and matrix[self.x][self.y - 1] == 0
+                and matrix[self.x][self.y + 1] == 1):
+            self.carRight()
+
+        if (matrix[self.x + 1][self.y] == 0
+                and matrix[self.x][self.y - 1] == 1
+                and matrix[self.x][self.y + 1] == 1):
+            self.carLeftRight()
+
+        if (matrix[self.x + 1][self.y] == 1
+                and matrix[self.x][self.y - 1] == 0
+                and matrix[self.x][self.y + 1] == 0):
+            self.carForward()
+
+        if (matrix[self.x + 1][self.y] == 1
+                and matrix[self.x][self.y - 1] == 1
+                and matrix[self.x][self.y + 1] == 0):
+            self.carForwardLeft()
+
+        if (matrix[self.x + 1][self.y] == 1
+                and matrix[self.x][self.y - 1] == 0
+                and matrix[self.x][self.y + 1] == 1):
+            self.carForwardRight()
+
+        if (matrix[self.x + 1][self.y] == 1
+                and matrix[self.x][self.y - 1] == 1
+                and matrix[self.x][self.y + 1] == 1):
+            self.carForwardLeftRight()
 
     def movePlusY(self):
         if self.y + self.speed <= self.desty:

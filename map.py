@@ -1,10 +1,10 @@
 import pygame
+import settings
 
 class Map:
 
 
         def __init__(self):
-            self.grid = []
             self.lines = [
                 [(0, 0), (1175, 0)],
                 [(1175, 0), (1175, 975)],
@@ -34,7 +34,7 @@ class Map:
                 [(1150, 300), (1150, 75)],
                 [(1150, 275), (1175, 275)]]
             self.black = (0,0,0)
-            self.matrix = [[0 for i in xrange(1500)] for i in xrange(1500)]
+
             self.buildGrid()
 
         def buildGrid(self):
@@ -53,22 +53,20 @@ class Map:
                     stepy = -1
 
                 # fill in a simple path here (later this will include complex items in the path)
-                for i in range(x1,x2, stepx):
-                    for j in range(y1,y2,stepy):
-                        self.grid[i][j] = 1
+                for i in range(x1,x2+1, stepx):
+                    for j in range(y1,y2+1,stepy):
+                        settings.matrix[i][j] = 1
 
 
 
-        def drawLines(self, screen):
-
-            xOffset = 50
-            yOffset = 50
+        def drawLines(self, screen, xOffset, yOffset):
 
             for i in self.lines:
                 lineStart = i[0]
                 x1,y1 = lineStart
                 lineEnd = i[1]
                 x2,y2 = lineEnd
+                # Pull in the offset position
                 pygame.draw.line(screen,self.black,(x1+xOffset, y1+yOffset),(x2+xOffset, y2+yOffset),5)
 
 
