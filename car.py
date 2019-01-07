@@ -1,4 +1,5 @@
 import settings
+import pygame
 
 class Car:
     def __init__(self):
@@ -37,6 +38,19 @@ class Car:
     def showDash(self):
         print("X=: "+ str(self.x) + " Y=: " + str(self.y) + " Speed=: " + str(self.speed) + " Direction=:" + str(self.direction))
 
+    def showDashOnScreen(self,screen):
+        matrix = settings.matrix
+        font = pygame.font.Font(None, 26)
+        dashText = "X=: "+ str(self.x) + " Y=: " + str(self.y) + " Speed=: " + str(self.speed) + " Direction=:" + str(self.direction) + "\n" \
+                    + str(matrix[self.x-1][self.y-1]) + str(matrix[self.x][self.y-1]) + str(matrix[self.x+1][self.y-1]) + "\n" \
+                    + str(matrix[self.x-1][self.y]) + str(matrix[self.x][self.y]) + str(matrix[self.x+1][self.y]) + "\n" \
+                    + str(matrix[self.x-1][self.y+1]) + str(matrix[self.x][self.y+1]) + str(matrix[self.x+1][self.y+1]) + "\n" \
+                    + "........................."
+
+
+
+        text_surface = font.render(dashText, True, settings.red)
+        screen.blit(text_surface, (0, 0))
 
     def carLeft(self):
         self.direction = self.direction - 90
@@ -223,6 +237,29 @@ class Car:
 
 
     def moveMinusY(self):
+        # 000
+        # 010 Must Stop
+
+        # 000
+        # 011 Must Move Right
+
+        # 000
+        # 110 Must Move Left
+
+        # 000
+        # 111 Must Move Left or Right
+
+        # 010
+        # 110 Can move Left
+
+        # 010
+        # 011 Can move Right
+
+        # 010
+        # 111 Can Move Left or right
+
+
+
         matrix = settings.matrix
         self.displayMatrix()
         # There is no way forward so stop (or even reverse ... later)

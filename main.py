@@ -45,7 +45,7 @@ while True:
     if car.carRunning == True:
         car.move()
         car.showDash()
-
+        car.showDashOnScreen(screen)
     screen.fill(settings.white)
     map.drawLines(screen,settings.xOffset,settings.yOffset)
     pygame.draw.circle(screen, settings.red, (car.x+settings.xOffset, car.y+settings.yOffset), 3, 3)
