@@ -1,5 +1,6 @@
 import settings
 import pygame
+import random
 
 class Car:
     def __init__(self):
@@ -52,19 +53,34 @@ class Car:
         text_surface = font.render(dashText, True, settings.red)
         screen.blit(text_surface, (0, 0))
 
+    def changeDirection(self,direction):
+        if direction == 'left':
+            self.direction -= 90
+            if self.direction < 0:
+                self.direction = 270
+        else:
+            self.direction += 90
+            if self.direction > 270:
+                self.direction = 0
+
     def carLeft(self, directions):
         x,y = directions['left']
         self.x += x
         self.y += y
+        self.changeDirection('left')
 
     def carRight(self,directions):
         x,y = directions['right']
         self.x += x
         self.y += y
+        self.changeDirection('right')
 
     def carLeftRight(self,directions):
         # Always go left for now... maze breaking
-        self.carLeft(directions)
+        if random.randint(1,3) == 1:
+            self.carLeft(directions)
+        else:
+            self.carRight(directions)
 
     def carForward(self, directions):
         x,y = directions['forward']
@@ -72,14 +88,39 @@ class Car:
         self.y += y
 
     def carForwardLeft(self,directions):
-        # for now only go Forward
-        self.carForward(directions)
+        # for now only go Left (Solve the Maze)
+        if random.randint(1,3) == 1:
+            self.carLeft(directions)
+        else:
+            self.carForward(directions)
+
+    # If we have no further forwards we must force right left or stop
+    def nextForward(self,directions):
+        matrix = settings.matrix
+        x,y = directions['forward']
+        return matrix[self.x + x + x][self.y + y + y]
+
 
     def carForwardRight(self, directions):
-        self.carForward(directions)
+        if random.randint(1,3) == 1:
+            if self.nextForward(directions) != 0:
+                self.carForward(directions)
+            else:
+                self.carRight(directions)
+        else:
+                self.carRight(directions)
 
     def carForwardLeftRight(self, directions):
-        self.carForward(directions)
+        if random.randint(1,3) == 1:
+            if self.nextForward(directions) != 0:
+                self.carForward(directions)
+            else:
+                self.carLeft(directions)
+        else:
+            if random.randint(1,3) == 1:
+                self.carLeft(directions)
+            else:
+                self.carRight(directions)
 
     def displayMatrix(self):
         matrix = settings.matrix
@@ -94,53 +135,6 @@ class Car:
               str(matrix[self.x][self.y+1]) +
               str(matrix[self.x+1][self.y+1]))
         print(".........................")
-
-    def checkLeftRight(self):
-        matrix = settings.matrix
-        if (self.direction == 90):
-            if ((matrix[self.x][self.y-1] ==1) and
-                (matrix[self.x][self.y+1 == 1])):
-                self.carLeftRight()
-            elif (matrix[self.x][self.y-1] == 1):
-                self.carLeft()
-            elif (matrix[self.x][self.y+1] ==1):
-                self.carRight()
-            else:
-                 self.carStop()
-        elif (self.direction == 180):
-            if ((matrix[self.x - 1][self.y] == 1) and
-                    (matrix[self.x + 1][self.y == 1])):
-                self.carLeftRight()
-            elif (matrix[self.x + 1][self.y] == 1):
-                self.carLeft()
-            elif (matrix[self.x - 1][self.y] == 1):
-                self.carRight()
-            else:
-                self.carStop()
-        elif (self.direction == 270):
-            if ((matrix[self.x][self.y - 1] == 1) and
-                    (matrix[self.x][self.y + 1 == 1])):
-                self.carLeftRight()
-            elif (matrix[self.x][self.y + 1] == 1):
-                self.carLeft()
-            elif (matrix[self.x][self.y - 1] == 1):
-                self.carRight()
-            else:
-                self.carStop()
-        elif (self.direction == 0):
-            if ((matrix[self.x][self.y - 1] == 1) and
-                    (matrix[self.x - 1][self.y == 1])):
-                self.carLeftRight()
-            elif (matrix[self.x - 1][self.y] == 1):
-                self.carLeft()
-            elif (matrix[self.x + 1][self.y] == 1):
-                self.carRight()
-            else:
-                self.carStop()
-        else:
-            print ("Error No Direction: " + str(self.direction))
-
-
 
 
     def getDirections(self):

@@ -23,7 +23,8 @@ pygame.display.update()
 
 #Create a Car
 car = car.Car()
-car.placeCarOnGrid(500,500)
+#car.placeCarOnGrid(550,327)
+car.placeCarOnGrid(925,2)
 car.setDirection(0)
 car.setSpeed(10)
 
@@ -52,7 +53,7 @@ while True:
 
     pygame.display.update()
 
-    msElapsed = clock.tick(10)
+    msElapsed = clock.tick(20)
 
 
 
