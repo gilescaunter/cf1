@@ -6,7 +6,7 @@ class Car:
         self.x = 0
         self.y = 0
         self.speed = 10
-        self.direction = 90
+        self.direction = 0
         self.currentSegment = 0
         self.destx = 0
         self.desty = 0
@@ -52,40 +52,34 @@ class Car:
         text_surface = font.render(dashText, True, settings.red)
         screen.blit(text_surface, (0, 0))
 
-    def carLeft(self):
-        self.direction = self.direction - 90
-        if self.direction < 0:
-            self.direction = 270
-        self.carForward()
+    def carLeft(self, directions):
+        x,y = directions['left']
+        self.x += x
+        self.y += y
 
-    def carRight(self):
-        self.direction += 90
-        if self.direction > 270:
-            self.direction = 0
+    def carRight(self,directions):
+        x,y = directions['right']
+        self.x += x
+        self.y += y
 
-    def carLeftRight(self):
+    def carLeftRight(self,directions):
         # Always go left for now... maze breaking
-        self.carLeft()
+        self.carLeft(directions)
 
-    def carForward(self):
-        if self.direction == 0:
-            self.y -= 1
-        elif self.direction == 90:
-            self.x += 1
-        elif self.direction == 270:
-            self.x -= 1
-        else:
-            self.y += 1
+    def carForward(self, directions):
+        x,y = directions['forward']
+        self.x += x
+        self.y += y
 
-    def carForwardLeft(self):
+    def carForwardLeft(self,directions):
         # for now only go Forward
-        self.carForward()
+        self.carForward(directions)
 
-    def carForwardRight(self):
-        self.carForward()
+    def carForwardRight(self, directions):
+        self.carForward(directions)
 
-    def carForwardLeftRight(self):
-        self.carForward()
+    def carForwardLeftRight(self, directions):
+        self.carForward(directions)
 
     def displayMatrix(self):
         matrix = settings.matrix
@@ -147,206 +141,7 @@ class Car:
             print ("Error No Direction: " + str(self.direction))
 
 
-    def movePlusX(self):
-        matrix = settings.matrix
-        self.displayMatrix()
-        # There is no way forward so stop (or even reverse ... later)
-        if (matrix[self.x+1][self.y] == 0
-            and matrix[self.x+1][self.y - 1] ==0
-            and matrix[self.x+1][self.y + 1] == 0):
-            self.checkLeftRight()
 
-        elif (matrix[self.x + 1][self.y] == 0
-                and matrix[self.x][self.y - 1] == 1
-                and matrix[self.x][self.y + 1] == 0):
-            self.carLeft()
-
-        elif (matrix[self.x + 1][self.y] == 0
-                and matrix[self.x][self.y - 1] == 0
-                and matrix[self.x][self.y + 1] == 1):
-            self.carRight()
-
-        elif (matrix[self.x + 1][self.y] == 0
-                and matrix[self.x][self.y - 1] == 1
-                and matrix[self.x][self.y + 1] == 1):
-            self.carLeftRight()
-
-        elif (matrix[self.x + 1][self.y] == 1
-                and matrix[self.x][self.y - 1] == 0
-                and matrix[self.x][self.y + 1] == 0):
-            self.carForward()
-
-        elif (matrix[self.x + 1][self.y] == 1
-                and matrix[self.x][self.y - 1] == 1
-                and matrix[self.x][self.y + 1] == 0):
-            self.carForwardLeft()
-
-        elif (matrix[self.x + 1][self.y] == 1
-                and matrix[self.x][self.y - 1] == 0
-                and matrix[self.x][self.y + 1] == 1):
-            self.carForwardRight()
-
-        elif (matrix[self.x + 1][self.y] == 1
-                and matrix[self.x][self.y - 1] == 1
-                and matrix[self.x][self.y + 1] == 1):
-            self.carForwardLeftRight()
-
-    def movePlusY(self):
-        matrix = settings.matrix
-        self.displayMatrix()
-        # There is no way forward so stop (or even reverse ... later)
-        if (matrix[self.x][self.y + 1] == 0
-            and matrix[self.x-1][self.y + 1] ==0
-            and matrix[self.x+1][self.y + 1] == 0):
-            self.checkLeftRight()
-
-        elif (matrix[self.x + 1][self.y+1] == 1
-                and matrix[self.x][self.y + 1] == 1
-                and matrix[self.x - 1][self.y + 1] == 0):
-            self.carLeft()
-
-        elif (matrix[self.x][self.y + 1] == 0
-                and matrix[self.x + 1][self.y + 1] == 0
-                and matrix[self.x - 1][self.y + 1] == 1):
-            self.carRight()
-
-        elif (matrix[self.x][self.y + 1] == 0
-                and matrix[self.x - 1][self.y + 1] == 1
-                and matrix[self.x + 1][self.y + 1] == 1):
-            self.carLeftRight()
-
-        elif (matrix[self.x][self.y + 1] == 1
-                and matrix[self.x - 1][self.y + 1] == 0
-                and matrix[self.x + 1][self.y + 1] == 0):
-            self.carForward()
-
-        elif (matrix[self.x][self.y + 1] == 1
-                and matrix[self.x + 1][self.y + 1] == 1
-                and matrix[self.x][self.y + 1] == 0):
-            self.carForwardLeft()
-
-        elif (matrix[self.x][self.y + 1] == 1
-                and matrix[self.x + 1][self.y + 1] == 0
-                and matrix[self.x - 1][self.y + 1] == 1):
-            self.carForwardRight()
-
-        elif (matrix[self.x + 1][self.y + 1] == 1
-                and matrix[self.x - 1][self.y + 1] == 1
-                and matrix[self.x + 1][self.y + 1] == 1):
-            self.carForwardLeftRight()
-
-
-    def moveMinusY(self):
-        # 000
-        # 010 Must Stop
-
-        # 000
-        # 011 Must Move Right
-
-        # 000
-        # 110 Must Move Left
-
-        # 000
-        # 111 Must Move Left or Right
-
-        # 010
-        # 110 Can move Left
-
-        # 010
-        # 011 Can move Right
-
-        # 010
-        # 111 Can Move Left or right
-
-
-
-        matrix = settings.matrix
-        self.displayMatrix()
-        # There is no way forward so stop (or even reverse ... later)
-        if (matrix[self.x][self.y - 1] == 0
-            and matrix[self.x-1][self.y - 1] ==0
-            and matrix[self.x+1][self.y - 1] == 0):
-            self.checkLeftRight()
-
-        elif (matrix[self.x][self.y] == 0
-                and matrix[self.x - 1][self.y - 1] == 1
-                and matrix[self.x + 1][self.y + 1] == 0):
-            self.carLeft()
-
-        elif (matrix[self.x][self.y] == 0
-                and matrix[self.x - 1][self.y - 1] == 0
-                and matrix[self.x + 1][self.y + 1] == 1):
-            self.carRight()
-
-        elif (matrix[self.x][self.y - 1] == 0
-                and matrix[self.x - 1][self.y - 1] == 1
-                and matrix[self.x + 1][self.y - 1] == 1):
-            self.carLeftRight()
-
-        elif (matrix[self.x][self.y - 1] == 1
-                and matrix[self.x - 1][self.y - 1] == 0
-                and matrix[self.x + 1][self.y - 1] == 0):
-            self.carForward()
-
-        elif (matrix[self.x][self.y - 1] == 1
-                and matrix[self.x - 1][self.y - 1] == 1
-                and matrix[self.x + 1][self.y - 1] == 0):
-            self.carForwardLeft()
-
-        elif (matrix[self.x][self.y - 1] == 1
-                and matrix[self.x - 1][self.y - 1] == 0
-                and matrix[self.x + 1][self.y - 1] == 1):
-            self.carForwardRight()
-
-        elif (matrix[self.x][self.y - 1] == 1
-                and matrix[self.x - 1][self.y - 1] == 1
-                and matrix[self.x + 1][self.y - 1] == 1):
-            self.carForwardLeftRight()
-
-
-    def moveMinusX(self):
-        matrix = settings.matrix
-        self.displayMatrix()
-        # There is no way forward so stop (or even reverse ... later)
-        if (matrix[self.x - 1][self.y] == 0
-            and matrix[self.x - 1][self.y - 1] ==0
-            and matrix[self.x - 1][self.y + 1] == 0):
-            self.checkLeftRight()
-
-        elif (matrix[self.x - 1][self.y] == 0
-                and matrix[self.x][self.y - 1] == 1
-                and matrix[self.x][self.y + 1] == 0):
-            self.carLeft()
-
-        elif (matrix[self.x - 1][self.y] == 0
-                and matrix[self.x][self.y - 1] == 0
-                and matrix[self.x][self.y + 1] == 1):
-            self.carRight()
-
-        elif (matrix[self.x - 1][self.y] == 0
-                and matrix[self.x][self.y - 1] == 1
-                and matrix[self.x][self.y + 1] == 1):
-            self.carLeftRight()
-
-        elif (matrix[self.x - 1][self.y] == 1
-                and matrix[self.x][self.y - 1] == 0
-                and matrix[self.x][self.y + 1] == 0):
-            self.carForward()
-
-        elif (matrix[self.x - 1][self.y] == 1
-                and matrix[self.x][self.y - 1] == 1
-                and matrix[self.x][self.y + 1] == 0):
-            self.carForwardLeft()
-
-        elif (matrix[self.x - 1][self.y] == 1
-                and matrix[self.x][self.y - 1] == 0
-                and matrix[self.x][self.y + 1] == 1):
-            self.carForwardRight()
-
-        elif (matrix[self.x - 1][self.y] == 1
-                and matrix[self.x][self.y - 1] == 1
-                and matrix[self.x][self.y + 1] == 1):
-            self.carForwardLeftRight()
 
     def getDirections(self):
         if self.direction == 0:
@@ -364,7 +159,7 @@ class Car:
             left = (1, 1)
             right = (-1, 1)
             directions = {"forward": forward, "left": left, "right": right}
-        else self.direction == 270:
+        elif self.direction == 270:
             forward = (-1, 0)
             left = (-1, 1)
             right = (-1, -1)
@@ -373,35 +168,38 @@ class Car:
 
     def getOptions(self,directions):
         options = []
+        self.displayMatrix()
         matrix = settings.matrix
         x,y = directions["forward"]
         if matrix[self.x + x][self.y + y] == 1:
-            options.add("forward")
+            options.append("forward")
         x,y = directions["left"]
         if matrix[self.x + x][self.y + y] == 1:
-            options.add("left")
+            options.append("left")
         x,y = directions["right"]
         if matrix[self.x + x][self.y + y] == 1:
-            options.add("right")
+            options.append("right")
         return options
 
     def move(self):
         directions = self.getDirections()
         options = self.getOptions(directions)
-
-
-
-    def move(self):
-        if self.direction == 90:
-            self.movePlusX()
-        elif self.direction == 0:
-            self.movePlusY()
-        elif self.direction == 180:
-            self.moveMinusY()
-        elif self.direction == 270:
-            self.moveMinusX()
+        if 'left' in options and 'right' in options and 'forward' in options:
+            self.carForwardLeftRight(directions)
+        elif 'left' in options and 'forward' in options:
+            self.carForwardLeft(directions)
+        elif 'right' in options and 'forward' in options:
+            self.carForwardRight(directions)
+        elif 'left' in options and 'right' in options:
+            self.carLeftRight(directions)
+        elif 'left' in options:
+            self.carLeft(directions)
+        elif 'right' in options:
+            self.carRight(directions)
+        elif 'forward' in options:
+            self.carForward(directions)
         else:
-            print("not implemented")
+            self.carStop()
 
     def routeAdd(self, routeSegment):
         self.route.append(routeSegment)

@@ -24,7 +24,7 @@ pygame.display.update()
 #Create a Car
 car = car.Car()
 car.placeCarOnGrid(500,500)
-car.setDirection(90)
+car.setDirection(0)
 car.setSpeed(10)
 
 #Put car on first part of the route
