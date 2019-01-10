@@ -348,8 +348,46 @@ class Car:
                 and matrix[self.x][self.y + 1] == 1):
             self.carForwardLeftRight()
 
+    def getDirections(self):
+        if self.direction == 0:
+            forward = (0,-1)
+            left = (-1,-1)
+            right = (1, -1)
+            directions = {"forward": forward, "left":left, "right":right}
+        elif self.direction == 90:
+            forward = (1, 0)
+            left = (1, -1)
+            right = (1, 1)
+            directions = {"forward": forward, "left": left, "right": right}
+        elif self.direction == 180:
+            forward = (0, 1)
+            left = (1, 1)
+            right = (-1, 1)
+            directions = {"forward": forward, "left": left, "right": right}
+        else self.direction == 270:
+            forward = (-1, 0)
+            left = (-1, 1)
+            right = (-1, -1)
+            directions = {"forward": forward, "left": left, "right": right}
+        return directions
 
+    def getOptions(self,directions):
+        options = []
+        matrix = settings.matrix
+        x,y = directions["forward"]
+        if matrix[self.x + x][self.y + y] == 1:
+            options.add("forward")
+        x,y = directions["left"]
+        if matrix[self.x + x][self.y + y] == 1:
+            options.add("left")
+        x,y = directions["right"]
+        if matrix[self.x + x][self.y + y] == 1:
+            options.add("right")
+        return options
 
+    def move(self):
+        directions = self.getDirections()
+        options = self.getOptions(directions)
 
 
 
