@@ -39,19 +39,6 @@ class Car:
     def showDash(self):
         print("X=: "+ str(self.x) + " Y=: " + str(self.y) + " Speed=: " + str(self.speed) + " Direction=:" + str(self.direction))
 
-    def showDashOnScreen(self,screen):
-        matrix = settings.matrix
-        font = pygame.font.Font(None, 26)
-        dashText = "X=: "+ str(self.x) + " Y=: " + str(self.y) + " Speed=: " + str(self.speed) + " Direction=:" + str(self.direction) + "\n" \
-                    + str(matrix[self.x-1][self.y-1]) + str(matrix[self.x][self.y-1]) + str(matrix[self.x+1][self.y-1]) + "\n" \
-                    + str(matrix[self.x-1][self.y]) + str(matrix[self.x][self.y]) + str(matrix[self.x+1][self.y]) + "\n" \
-                    + str(matrix[self.x-1][self.y+1]) + str(matrix[self.x][self.y+1]) + str(matrix[self.x+1][self.y+1]) + "\n" \
-                    + "........................."
-
-
-
-        text_surface = font.render(dashText, True, settings.red)
-        screen.blit(text_surface, (0, 0))
 
     def changeDirection(self,direction):
         if direction == 'left':
